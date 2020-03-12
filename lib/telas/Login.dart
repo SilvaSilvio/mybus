@@ -1,11 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mybus/ConexaoBanco/firebase.dart';
+import 'package:mybus/Model/Usuario.dart';
+import 'package:mybus/telas/Home.dart';
+import 'package:mybus/telas/TelaPassageiro/PainelPassageiro.dart';
 
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<Login>  {
+
+  TextEditingController _controllerEmail = TextEditingController();
+  TextEditingController _controllerSenha = TextEditingController();
+  String _mensagemErro = "";
+
+          _validarCampos(){
+            String email = _controllerEmail.text;
+            String senha = _controllerSenha.text;
+
+             Usuario usuario = new Usuario();
+                usuario.email = email;
+                usuario.senha = senha;
+
+                _logarUsuario( usuario );
+
+
+        
+            if (email.isNotEmpty && email.contains("@")) {
+              if (senha.isNotEmpty) {
+                setState(() {
+                  _mensagemErro = "";
+                });
+        
+                Usuario usuario = new Usuario();
+                usuario.email = email;
+                usuario.senha = senha;
+
+                _logarUsuario( usuario );
+
+                } else {
+                setState(() {
+                  _mensagemErro = "Preencha a senha!";
+                });
+              }
+            } else {
+              setState(() {
+                _mensagemErro = "Email inválido";
+              });
+            }
+          }
+
+          _logarUsuario( Usuario usuario ){
+              FirebaseAuth auth = FirebaseAuth.instance;
+
+              auth.signInWithEmailAndPassword(
+                email: usuario.email,
+                password: usuario.senha
+                ).then((firebaserUser) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PainelPassageiro(),
+                    )
+                  );
+
+                }).catchError((error){
+                  print("Erro " + error.toString());
+                  _mensagemErro = "Erro ao autenticar Usuário, verifique e-mail e senha e tente novamente";
+                });
+          }
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +99,7 @@ class _LoginState extends State<Login> {
                 Padding(
                   padding: EdgeInsets.only(top: 20, bottom: 8),
                   child: TextField(
+                    controller: _controllerEmail,
                     //autofocus: true,
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(
@@ -51,6 +118,7 @@ class _LoginState extends State<Login> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 8),
                   child: TextField(
+                    controller: _controllerSenha,
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
                     style: TextStyle(
@@ -82,9 +150,18 @@ class _LoginState extends State<Login> {
                         borderRadius: BorderRadius.circular(32),
                       ),
                       onPressed: () {
-                        Navigator.pushNamed(context, "/SliderMenu");
+                        _validarCampos();
                       }),
                 ),
+                  Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Center(
+                    child: Text(
+                      _mensagemErro,
+                      style: TextStyle(color: Colors.red, fontSize: 20),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

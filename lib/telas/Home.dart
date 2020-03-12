@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mybus/telas/Cadastro.dart';
 
 import 'Login.dart';
-import 'TelaCadastro.dart';
+
+
 
 class Home extends StatefulWidget {
   @override
@@ -17,7 +19,7 @@ class _HomeState extends State<Home> {
 
     List<Widget> telas = [
       Login(),
-      TelaCadastro(),
+      Cadastro(),
     ];
     return Scaffold(
       body: telas[_indiceAtual],
