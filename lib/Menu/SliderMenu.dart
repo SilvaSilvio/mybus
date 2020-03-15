@@ -3,7 +3,6 @@ import 'package:mybus/Menu/Ajuda.dart';
 import 'package:mybus/Menu/Carteira.dart';
 import 'package:mybus/Menu/Configuracoes.dart';
 import 'package:mybus/Menu/EmpresaDetalhe.dart';
-import 'package:mybus/Menu/Pagamento.dart';
 
 class SliderMenu extends StatefulWidget {
   @override
@@ -78,12 +77,7 @@ class _SliderMenuState extends State<SliderMenu> {
               onTap: () => Navigator.of(context).push(new MaterialPageRoute(
                   builder: (BuildContext context) => new Carteira())),
             ),
-            new ListTile(
-              title: new Text("Pagamento"),
-              trailing: new Icon(Icons.arrow_right),
-              onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-                  builder: (BuildContext context) => new Pagamento())),
-            ),
+           
             new ListTile(
               title: new Text("Ajuda"),
               trailing: new Icon(Icons.arrow_right),

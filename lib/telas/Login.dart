@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mybus/ConexaoBanco/firebase.dart';
 import 'package:mybus/Model/Usuario.dart';
 import 'package:mybus/telas/Home.dart';
+import 'package:mybus/telas/TelaMotorista/PainelMotorista.dart';
 import 'package:mybus/telas/TelaPassageiro/PainelPassageiro.dart';
 
 class Login extends StatefulWidget {
@@ -66,10 +67,31 @@ class _LoginState extends State<Login>  {
                   );
 
                 }).catchError((error){
-                  print("Erro " + error.toString());
-                  _mensagemErro = "Erro ao autenticar Usuário, verifique e-mail e senha e tente novamente";
+                 setState(() {
+                    _mensagemErro = "Erro ao autenticar Usuário, verifique e-mail e senha e tente novamente";
+                 });
                 });
           }
+
+  Future _verificarUsuarioLogado() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    FirebaseUser _usuarioLogado = await auth.currentUser();
+    if(_usuarioLogado != null){
+       Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PainelMotorista(),
+         )
+      );
+    }
+
+
+  }
+          @override
+  void initState() {
+    _verificarUsuarioLogado();
+    super.initState();
+  }
 
   
   @override

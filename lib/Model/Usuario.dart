@@ -1,4 +1,3 @@
-import 'package:mybus/Model/TiposUsuario.dart';
 
 class Usuario {
   String _idUsuario;
@@ -7,11 +6,12 @@ class Usuario {
   String _email;
   String _username;
   String _senha;
-    List<TiposUsuario> tipoUsuario = [];
+  List<TiposUsuario> tipoUsuario = [];
+  
 
   Usuario();
 
-  String verificarTipoUsuario(int tipoUsuario) {
+  String verificarTipoUsuario(bool tipoUsuario) {
     var tipoUsuario;
     if (tipoUsuario == 1) {
       tipoUsuario = "Passageiro";
@@ -29,6 +29,7 @@ class Usuario {
       "email": this.email,
       "telefone": this.telefone,
       "TipoUsuario ": this.tipoUsuario,
+
     };
 
     return map;
@@ -71,4 +72,10 @@ class Usuario {
   }
 }
 
-enum TiposUsuario { Passageiro, Motorista, Administrador }
+enum TiposUsuario {
+  Passageiro,
+  Motorista,
+  Administrador
+  
+   
+  }
