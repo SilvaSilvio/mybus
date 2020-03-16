@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mybus/telas/TelaMotorista/Telas/QrCodeCreate.dart';
+import 'Telas/Historico.dart';
 import 'Telas/InicioPassageiro.dart';
 import 'Telas/Recargas.dart';
 
@@ -10,26 +11,23 @@ class PainelPassageiro extends StatefulWidget {
 }
 
 class _PainelPassageiroState extends State<PainelPassageiro> {
- String _emailUsuario = "";
+  String _emailUsuario = "";
 
-  Future _recuperarDadosUsuario() async{
+  Future _recuperarDadosUsuario() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseUser _usuarioLogado = await auth.currentUser();
 
     setState(() {
       _emailUsuario = _usuarioLogado.email;
     });
-    
   }
 
   @override
-  void initState(){
+  void initState() {
     _recuperarDadosUsuario();
   }
 
-  List<String> itensMenu = [
-    "Deslogar"
-  ];
+  List<String> itensMenu = ["Deslogar"];
 
   _deslogarUsuario() async {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -37,50 +35,45 @@ class _PainelPassageiroState extends State<PainelPassageiro> {
     await auth.signOut();
     Navigator.pushReplacementNamed(context, "/");
   }
-  
-  _escolhaMenuItem( String escolha ){
 
-    switch ( escolha ){
-      case "Deslogar" : _deslogarUsuario();
-      break;
+  _escolhaMenuItem(String escolha) {
+    switch (escolha) {
+      case "Deslogar":
+        _deslogarUsuario();
+        break;
     }
   }
+
   int _indiceAtual = 0;
   List<Widget> telas = [
-      InicioPassageiro(),
-      RecargasPassageiro(),
-      QrCodeCreate(),
-     // HistoricoCompra(),
-
-    ];
-    
+    InicioPassageiro(),
+    RecargasPassageiro(),
+    QrCodeCreate(),
+    Historico(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
-        title: Text("Painel Motorista"),
+        title: Text("Painel Passageiro"),
         actions: <Widget>[
           PopupMenuButton<String>(
-            onSelected: _escolhaMenuItem,
-            itemBuilder: (context){
-
-              return itensMenu.map((String item){
-                return PopupMenuItem<String>(
-                  value: item,
-                  child: Text(item),
-                );
-              }).toList();
-            }
-          )
+              onSelected: _escolhaMenuItem,
+              itemBuilder: (context) {
+                return itensMenu.map((String item) {
+                  return PopupMenuItem<String>(
+                    value: item,
+                    child: Text(item),
+                  );
+                }).toList();
+              })
         ],
       ),
-      body: telas[_indiceAtual ],
+      body: telas[_indiceAtual],
       bottomNavigationBar: BottomNavigationBar(
-
         currentIndex: _indiceAtual,
-        onTap: (indice){
+        onTap: (indice) {
           setState(() {
             _indiceAtual = indice;
           });
@@ -108,10 +101,8 @@ class _PainelPassageiroState extends State<PainelPassageiro> {
             icon: Icon(Icons.reorder),
             backgroundColor: Colors.green,
           ),
-            
-        ], 
-        ),
+        ],
+      ),
     );
-    
   }
 }

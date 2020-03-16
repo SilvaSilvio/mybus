@@ -15,14 +15,14 @@ class Rotas {
             builder: (_) => Home()
         );
         break;
-        case "/painel-motorista" :
-        return MaterialPageRoute(
-            builder: (_) => PainelMotorista()
-        );
-        break;
       case "/painel-passageiro" :
         return MaterialPageRoute(
             builder: (_) => PainelPassageiro()
+        );
+        break;
+         case "/painel-motorista" :
+        return MaterialPageRoute(
+            builder: (_) => PainelMotorista()
         );
         break;
         case "/painel-administrador" :

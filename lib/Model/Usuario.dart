@@ -1,4 +1,3 @@
-
 class Usuario {
   String _idUsuario;
   String _nome;
@@ -6,21 +5,25 @@ class Usuario {
   String _email;
   String _username;
   String _senha;
-  List<TiposUsuario> tipoUsuario = [];
-  
+  String _tipoUsuario;
+  // List<TiposUsuario> tipoUsuario = [TiposUsuario.Passageiro, TiposUsuario.Motorista, TiposUsuario.Administrador];
 
   Usuario();
 
-  String verificarTipoUsuario(bool tipoUsuario) {
-    var tipoUsuario;
-    if (tipoUsuario == 1) {
-      tipoUsuario = "Passageiro";
-    } else if (tipoUsuario == 2) {
-      tipoUsuario = "Motorista";
-    } else {
-      tipoUsuario = "Administrador";
+  String verificaTipoUsuario(String tipoUsuario) {
+    var retorno;
+    if (tipoUsuario == "passageiro"){
+      retorno = "Passageiro";
     }
-    return tipoUsuario;
+    else if (tipoUsuario == "motorista"){
+      retorno = "Motorista";
+    }
+    
+    return retorno;
+  }
+
+  String identificaUsuario(bool tipoUsuario){
+    return tipoUsuario ? "Motorista" : "Passageiro";
   }
 
   Map<String, dynamic> toMap() {
@@ -28,8 +31,7 @@ class Usuario {
       "nome": this.nome,
       "email": this.email,
       "telefone": this.telefone,
-      "TipoUsuario ": this.tipoUsuario,
-
+      "TipoUsuario": this.tipoUsuario,
     };
 
     return map;
@@ -70,12 +72,10 @@ class Usuario {
   set username(String value) {
     _username = value;
   }
-}
 
-enum TiposUsuario {
-  Passageiro,
-  Motorista,
-  Administrador
-  
-   
+  String get tipoUsuario => _tipoUsuario;
+
+  set tipoUsuario(String value) {
+    _tipoUsuario = value;
   }
+}

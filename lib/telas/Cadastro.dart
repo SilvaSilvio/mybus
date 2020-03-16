@@ -13,10 +13,8 @@ class _CadastroState extends State<Cadastro> {
   TextEditingController _controllerTelefone = TextEditingController();
   TextEditingController _controllerEmail = TextEditingController();
   TextEditingController _controllerSenha = TextEditingController();
-  String _tipoUsuario;
+  bool _tipoUsuario = false;
   String _mensagemErro = "";
-
- 
 
   _validarCampos() {
     //Recuperar dados dos campos
@@ -24,6 +22,9 @@ class _CadastroState extends State<Cadastro> {
     String telefone = _controllerTelefone.text;
     String email = _controllerEmail.text;
     String senha = _controllerSenha.text;
+
+    Usuario usuario = Usuario();
+   
 
     //validar campos
     if (nome.isNotEmpty) {
@@ -36,9 +37,10 @@ class _CadastroState extends State<Cadastro> {
             usuario.telefone = telefone;
             usuario.email = email;
             usuario.senha = senha;
-           // usuario.tipoUsuario = usuario.verificarTipoUsuario( _tipoUsuario ) as List<TiposUsuario>;
-
+            //usuario.tipoUsuario = usuario.verificaTipoUsuario( _tipoUsuario );
+             usuario.tipoUsuario = usuario.identificaUsuario( _tipoUsuario );
             _cadastrarUsuario( usuario );
+
           } else {
             setState(() {
               _mensagemErro = "Preencha a senha! digite mais de 6 caracteres";
@@ -51,7 +53,7 @@ class _CadastroState extends State<Cadastro> {
         }
       } else {
         setState(() {
-          _mensagemErro = "Informe o celular com o DDD";
+          _mensagemErro = "Informe um número com pelo menos 9 dǵitos";
         });
       }
     } else {
@@ -73,17 +75,19 @@ class _CadastroState extends State<Cadastro> {
           .collection("usuarios")
           .document(firebaseUser.user.uid)
           .setData(usuario.toMap());
+          
 
       //  redireciona para o painel, de acordo com o tipoUsuario
-      switch (usuario.tipoUsuario.toString()) {
+      switch ( usuario.tipoUsuario ) {
         //usuario.tipoUsuario
-        case "motorista":
+          case "Passageiro":
+          Navigator.pushNamedAndRemoveUntil(
+          context, "/painel-passageiro", (_) => false
+          );
+          break;
+          case "Motorista":
           Navigator.pushNamedAndRemoveUntil(
               context, "/painel-motorista", (_) => false);
-          break;
-        case "passageiro":
-          Navigator.pushNamedAndRemoveUntil(
-              context, "/painel-passageiro", (_) => false);
           break;
         case "administrador":
           Navigator.pushNamedAndRemoveUntil(
@@ -200,68 +204,16 @@ class _CadastroState extends State<Cadastro> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     //crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        "Passageiro",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+                       Text("Passageiro", style: TextStyle(fontSize: 15, color: Colors.white),),
+                      Switch(
+                          value: _tipoUsuario,
+                          onChanged: (bool valor){
+                            setState(() {
+                              _tipoUsuario = valor;
+                            });
+                          }
                       ),
-                      Radio(
-                        value: "passageiro",
-                        groupValue: _tipoUsuario,
-                        autofocus: true,
-                        hoverColor: Colors.white,
-                        focusColor: Colors.white,
-                        onChanged: (String escolha) {
-                          setState(() {
-                            _tipoUsuario = escolha;
-                          });
-                        },
-                      ),
-                      Text(
-                        "Motorista",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      Radio(
-                        value: "motorista",
-                        groupValue: _tipoUsuario,
-                        onChanged: (String escolha) {
-                          setState(() {
-                            _tipoUsuario = escolha;
-                          });
-                        },
-                      ),
-                      Text(
-                        "Admin",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      Radio(
-                        value: "admin",
-                        groupValue: _tipoUsuario,
-                        onChanged: (String escolha) {
-                          setState(() {
-                            _tipoUsuario = escolha;
-                            TextField(
-                              controller: _controllerSenha,
-                              obscureText: true,
-                              keyboardType: TextInputType.emailAddress,
-                              style: TextStyle(fontSize: 20),
-                              decoration: InputDecoration(
-                                  contentPadding:
-                                      EdgeInsets.fromLTRB(32, 16, 32, 16),
-                                  hintText: "Informe a chave admin",
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(6))),
-                            );
-                          });
-                        },
-                      ),
+                      Text("Motorista", style: TextStyle(fontSize: 15, color: Colors.white)),
                     ],
                   ),
                 ),
