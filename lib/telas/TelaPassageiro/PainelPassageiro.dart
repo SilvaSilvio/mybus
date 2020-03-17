@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mybus/Menu/Configuracoes.dart';
 import 'package:mybus/telas/TelaMotorista/Telas/QrCodeCreate.dart';
 import 'Telas/Historico.dart';
 import 'Telas/InicioPassageiro.dart';
@@ -27,7 +28,10 @@ class _PainelPassageiroState extends State<PainelPassageiro> {
     _recuperarDadosUsuario();
   }
 
-  List<String> itensMenu = ["Deslogar"];
+  List<String> itensMenu = [
+    "Configurações",
+    "Deslogar"
+    ];
 
   _deslogarUsuario() async {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -36,8 +40,11 @@ class _PainelPassageiroState extends State<PainelPassageiro> {
     Navigator.pushReplacementNamed(context, "/");
   }
 
-  _escolhaMenuItem(String escolha) {
-    switch (escolha) {
+  _escolhaMenuItem(String itemEscolhido) {
+    switch (itemEscolhido) { 
+      case "Configurações":
+           Navigator.pushNamed(context, "/configuracoes");
+        break;
       case "Deslogar":
         _deslogarUsuario();
         break;

@@ -3,6 +3,7 @@ import 'package:mybus/telas/Home.dart';
 import 'package:mybus/telas/TelaAdministrador/PainelAdministrador.dart';
 import 'package:mybus/telas/TelaMotorista/PainelMotorista.dart';
 import 'package:mybus/telas/TelaPassageiro/PainelPassageiro.dart';
+import 'package:mybus/telas/TelaPassageiro/Telas/Configura%C3%A7%C3%B5es.dart';
 
 
 class Rotas {
@@ -29,6 +30,10 @@ class Rotas {
         return MaterialPageRoute(
             builder: (_) => PainelAdministrador()
         );
+        case "/configuracoes" :
+        return MaterialPageRoute(
+          builder: (_) => Configuracoes()
+           );
       default:
         _erroRota();
     }

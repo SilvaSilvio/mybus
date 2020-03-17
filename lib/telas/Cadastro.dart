@@ -75,6 +75,8 @@ class _CadastroState extends State<Cadastro> {
           .collection("usuarios")
           .document(firebaseUser.user.uid)
           .setData(usuario.toMap());
+
+          
           
 
       //  redireciona para o painel, de acordo com o tipoUsuario

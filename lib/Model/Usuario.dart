@@ -1,3 +1,4 @@
+
 class Usuario {
   String _idUsuario;
   String _nome;
@@ -10,17 +11,6 @@ class Usuario {
 
   Usuario();
 
-  String verificaTipoUsuario(String tipoUsuario) {
-    var retorno;
-    if (tipoUsuario == "passageiro"){
-      retorno = "Passageiro";
-    }
-    else if (tipoUsuario == "motorista"){
-      retorno = "Motorista";
-    }
-    
-    return retorno;
-  }
 
   String identificaUsuario(bool tipoUsuario){
     return tipoUsuario ? "Motorista" : "Passageiro";
