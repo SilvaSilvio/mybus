@@ -32,17 +32,24 @@ class _HomeState extends State<Home> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        fixedColor: Colors.red,
+        fixedColor: Colors.blue,
+        backgroundColor: Colors.black,
+        
         items: [
           BottomNavigationBarItem(
-            title: Text("Login"),
-            icon: Icon(Icons.home),
+            title: Text("Login", style: TextStyle(
+               color: Colors.white,
+            ),
+            ),
+            icon: Icon(Icons.home, color: Colors.white),
+            
             backgroundColor: Colors.yellow,
           ),
           BottomNavigationBarItem(
-            title: Text("Cadastro"),
-            icon: Icon(Icons.person_add),
-            backgroundColor: Colors.green,
+            title: Text("Cadastro", style: TextStyle(
+                color: Colors.white)),
+            icon: Icon(Icons.person_add, color: Colors.white,),
+            backgroundColor: Colors.yellow,
           ),
         ], 
         ),

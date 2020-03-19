@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mybus/Menu/Configuracoes.dart';
-import 'package:mybus/telas/TelaMotorista/Telas/QrCodeCreate.dart';
+import 'package:mybus/telas/TelaPassageiro/Telas/QrScanner.dart';
 import 'Telas/Historico.dart';
 import 'Telas/InicioPassageiro.dart';
 import 'Telas/Recargas.dart';
@@ -55,7 +55,7 @@ class _PainelPassageiroState extends State<PainelPassageiro> {
   List<Widget> telas = [
     InicioPassageiro(),
     RecargasPassageiro(),
-    QrCodeCreate(),
+    QrScanner(),
     Historico(),
   ];
 
@@ -63,7 +63,8 @@ class _PainelPassageiroState extends State<PainelPassageiro> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Painel Passageiro"),
+        title: Text("Passageiro"),
+        backgroundColor: Colors.black,
         actions: <Widget>[
           PopupMenuButton<String>(
               onSelected: _escolhaMenuItem,
@@ -79,6 +80,7 @@ class _PainelPassageiroState extends State<PainelPassageiro> {
       ),
       body: telas[_indiceAtual],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
         currentIndex: _indiceAtual,
         onTap: (indice) {
           setState(() {

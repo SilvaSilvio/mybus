@@ -22,7 +22,8 @@ dependencies:
   cloud_firestore: ^0.13.4+1 # db do firebase
   firebase_storage: ^3.1.3 # armazenamento de arqivos
   firebase_auth: ^0.15.5+2 # autenticação
-  image_picker: ^0.6.3+4 #Selecionar imagens da galeria
+  image_picker: ^0.6.3+4 # Selecionar imagens da galeria
+  masked_text: ^0.0.6 # Responsavel por definir o campo telefone.
 
 dev_dependencies:
   flutter_test:
@@ -50,11 +51,11 @@ flutter:
   - images/Logo.png
   - images/logo12.png
   - images/usuario.png
-  - images/fundo.png
-  - images/pagamento.png
-  - images/PlanoFundo3.jpg
+  - images/LogoBus.png
   - images/MyBus.png
   - images/LoginCadastro1.png
+
+  
  
 
 

@@ -32,7 +32,7 @@ class _InicioPassageiroState extends State<InicioPassageiro> {
     return Scaffold(
       body: Container(
         child: Text(
-          "Bem vindo $_nome",
+          "Bem vindo $_EmailUsuario",
           style: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,

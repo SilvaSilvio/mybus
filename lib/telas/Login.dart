@@ -99,13 +99,10 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
+
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("images/PlanoFundo3.jpg"),
-            fit: BoxFit.cover,
-          ),
-        ),
+      
         padding: EdgeInsets.all(16),
         child: Center(
           child: SingleChildScrollView(
@@ -116,9 +113,18 @@ class _LoginState extends State<Login> {
                   padding: EdgeInsets.only(bottom: 32),
                 ),
                 Image.asset(
-                  "images/MyBus.png",
-                  width: 200,
-                  height: 150,
+                  "images/LogoBus.png",
+                   width: 200, height: 200, color: Colors.blue
+                ),
+                Center(
+                  child: Text(
+                    "My Bus", style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+
+                    ),
+                    ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 20, bottom: 8),
@@ -127,15 +133,15 @@ class _LoginState extends State<Login> {
                     //autofocus: true,
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 15,
                     ),
                     decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                        contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                         hintText: "E-mail",
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(32),
+                          borderRadius: BorderRadius.circular(15),
                         )),
                   ),
                 ),
@@ -146,15 +152,15 @@ class _LoginState extends State<Login> {
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 15,
                     ),
                     decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                        contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                         hintText: "Senha",
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(32),
+                          borderRadius: BorderRadius.circular(15),
                         )),
                   ),
                 ),
@@ -165,13 +171,13 @@ class _LoginState extends State<Login> {
                         "Logar",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 15,
                         ),
                       ),
-                      color: Colors.green,
-                      padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                      color: Colors.blue,
+                      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       onPressed: () {
                         _validarCampos();
