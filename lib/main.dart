@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mybus/telas/Home.dart';
-
 import 'Rotas.dart';
 
+
 final ThemeData temaPadrao = ThemeData(
-  primaryColor: Color(0xff075E54),
-      accentColor: Color(0xff25D366),
+  primaryColor: Color(0xff363636),//0xff075E54
+      accentColor: Color(0xffD37682),//0xff25D366
 );
 
 void main() => runApp(MaterialApp(
@@ -14,5 +14,6 @@ void main() => runApp(MaterialApp(
   initialRoute: "/",
   onGenerateRoute: Rotas.gerarRotas,
   debugShowCheckedModeBanner: false,
+  home: Home(),
 )
 );

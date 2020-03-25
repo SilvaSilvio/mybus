@@ -24,7 +24,12 @@ dependencies:
   firebase_auth: ^0.15.5+2 # autenticação
   image_picker: ^0.6.3+4 # Selecionar imagens da galeria
   masked_text: ^0.0.6 # Responsavel por definir o campo telefone.
-
+  scoped_model: ^1.0.1
+  url_launcher: ^5.4.2 #responsável por realizar as ligações.
+  maps_launcher: ^1.2.0 # responsável por mostrar as coordenadas. url_launcher também tem essa função.
+  flutter_staggered_grid_view: ^0.3.0 #responsável por criar um grid de imagens.
+  transparent_image: ^1.0.0 #responsável por deixar imagens transparentes, cor fundo.
+  flutter_snake_navigationbar: ^0.4.0+1 # Utilizar navegação inferior customizada
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,5 +1,5 @@
 
-class Usuario {
+class Usuario1 {
   String _idUsuario;
   String _nome;
   String _telefone;
@@ -7,25 +7,13 @@ class Usuario {
   String _username;
   String _senha;
   String _tipoUsuario;
+  int cpf;
   // List<TiposUsuario> tipoUsuario = [TiposUsuario.Passageiro, TiposUsuario.Motorista, TiposUsuario.Administrador];
 
-  Usuario();
+  Usuario1();
 
 
-  String identificaUsuario(bool tipoUsuario){
-    return tipoUsuario ? "Motorista" : "Passageiro";
-  }
-
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> map = {
-      "nome": this.nome,
-      "email": this.email,
-      "telefone": this.telefone,
-      "TipoUsuario": this.tipoUsuario,
-    };
-
-    return map;
-  }
+  
 
   String get senha => _senha;
 

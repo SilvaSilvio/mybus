@@ -1,117 +1,151 @@
+
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mybus/Menu/Configuracoes.dart';
-import 'package:mybus/telas/TelaPassageiro/Telas/QrScanner.dart';
-import 'Telas/Historico.dart';
-import 'Telas/InicioPassageiro.dart';
-import 'Telas/Recargas.dart';
+import 'package:mybus/Global/Inicio_Screen.dart';
+import 'package:mybus/Global/QrScanner.dart';
+import 'package:mybus/Global/Recargas.dart';
+import 'package:mybus/Global/Termo_Uso.dart';
+import 'package:mybus/Global/perfil.dart';
+import 'package:mybus/Model/UserModel.dart';
+import 'package:mybus/drawer/custom_drawer.dart';
+import 'package:mybus/tabs/LojasTab.dart';
+import 'package:mybus/tabs/configuracoes_tab.dart';
 
-class PainelPassageiro extends StatefulWidget {
-  @override
-  _PainelPassageiroState createState() => _PainelPassageiroState();
-}
 
-class _PainelPassageiroState extends State<PainelPassageiro> {
-  String _emailUsuario = "";
-
-  Future _recuperarDadosUsuario() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    FirebaseUser _usuarioLogado = await auth.currentUser();
-
-    setState(() {
-      _emailUsuario = _usuarioLogado.email;
-    });
-  }
-
-  @override
-  void initState() {
-    _recuperarDadosUsuario();
-  }
-
-  List<String> itensMenu = [
-    "Configurações",
-    "Deslogar"
-    ];
-
-  _deslogarUsuario() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-
-    await auth.signOut();
-    Navigator.pushReplacementNamed(context, "/");
-  }
-
-  _escolhaMenuItem(String itemEscolhido) {
-    switch (itemEscolhido) { 
-      case "Configurações":
-           Navigator.pushNamed(context, "/configuracoes");
-        break;
-      case "Deslogar":
-        _deslogarUsuario();
-        break;
-    }
-  }
-
+class PainelPassageiro extends StatelessWidget {
+  final _pageController = PageController();
   int _indiceAtual = 0;
-  List<Widget> telas = [
-    InicioPassageiro(),
-    RecargasPassageiro(),
-    QrScanner(),
-    Historico(),
-  ];
 
+  List<Widget> telas = [
+  Inicio(),
+  Recarga(),
+
+  ];  
+
+  Widget _buildBodyBack() => Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+          Color.fromARGB(255, 211, 118, 130),
+          Color.fromARGB(255, 253, 181, 168)
+        ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+      );
+
+      void _signOut() async {
+        UserModel user = UserModel();
+        user.signOut();
+        
+  }
+
+      
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Passageiro"),
-        backgroundColor: Colors.black,
-        actions: <Widget>[
-          PopupMenuButton<String>(
-              onSelected: _escolhaMenuItem,
-              itemBuilder: (context) {
-                return itensMenu.map((String item) {
-                  return PopupMenuItem<String>(
-                    value: item,
-                    child: Text(item),
-                  );
-                }).toList();
-              })
-        ],
-      ),
-      body: telas[_indiceAtual],
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        currentIndex: _indiceAtual,
-        onTap: (indice) {
-          setState(() {
-            _indiceAtual = indice;
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        fixedColor: Colors.red,
-        items: [
-          BottomNavigationBarItem(
-            title: Text("Inicio"),
-            icon: Icon(Icons.home),
-            backgroundColor: Colors.yellow,
+      body: PageView(
+        controller: _pageController,
+        physics: NeverScrollableScrollPhysics(),
+        children: <Widget>[
+          Scaffold(
+            body: Inicio(),
+            drawer: CustomDrawer(_pageController),
           ),
-          BottomNavigationBarItem(
-            title: Text("Recargas"),
-            icon: Icon(Icons.credit_card),
-            backgroundColor: Colors.green,
+          Scaffold(
+            appBar: AppBar(
+              title: Text(
+                "Perfil",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+              centerTitle: true,
+              backgroundColor: Theme.of(context).accentColor,
+            ),
+            body: Perfil(),
+            drawer: CustomDrawer(_pageController),
           ),
-          BottomNavigationBarItem(
-            title: Text("QrCode"),
-            icon: Icon(Icons.aspect_ratio),
-            backgroundColor: Colors.green,
+          Scaffold(
+            appBar: AppBar(
+              title: new Text(
+                "QRCode",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+              centerTitle: true,
+              backgroundColor: Theme.of(context).accentColor,
+            ),
+            body: QrScanner(),
+            drawer: CustomDrawer(_pageController),
           ),
-          BottomNavigationBarItem(
-            title: Text("Historico"),
-            icon: Icon(Icons.reorder),
-            backgroundColor: Colors.green,
+          Scaffold(
+            appBar: AppBar(
+              title: new Text(
+                "Lojas Credenciadas",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+              centerTitle: true,
+              backgroundColor: Theme.of(context).accentColor,
+            ),
+            body: LojasTab(),
+            drawer: CustomDrawer(_pageController),
+            backgroundColor: Theme.of(context).primaryColor,
           ),
-        ],
-      ),
-    );
+          Scaffold(
+            appBar: AppBar(
+              title: new Text(
+                "Recarga online",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+              centerTitle: true,
+              backgroundColor: Theme.of(context).accentColor,
+            ),
+            body: Recarga(),
+            drawer: CustomDrawer(_pageController),
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          Scaffold(
+            appBar: AppBar(
+              title: new Text(
+                "Configurações",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+              centerTitle: true,
+              backgroundColor: Theme.of(context).accentColor,
+            ),
+            body: ConfiguracoesTab(),
+            drawer: CustomDrawer(_pageController),
+          ),
+           Scaffold(
+            body: Container(
+              child: Column(
+                children: <Widget>[
+                  Text("Amigos Convidados")
+                ],
+              ),
+            ),
+                       
+            drawer: CustomDrawer(_pageController),
+          ),         
+        ]
+        ),
+        );
+
+        
+  
   }
+
 }

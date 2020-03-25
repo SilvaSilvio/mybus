@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mybus/Global/perfil.dart';
 import 'package:mybus/telas/Home.dart';
 import 'package:mybus/telas/TelaAdministrador/PainelAdministrador.dart';
 import 'package:mybus/telas/TelaMotorista/PainelMotorista.dart';
 import 'package:mybus/telas/TelaPassageiro/PainelPassageiro.dart';
 
-import 'Global/Configurações.dart';
 
 
 class Rotas {
@@ -33,7 +33,7 @@ class Rotas {
         );
         case "/configuracoes" :
         return MaterialPageRoute(
-          builder: (_) => Configuracoes()
+          builder: (_) => Perfil()
            );
       default:
         _erroRota();

@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'Telas/HistoricoCompra.dart';
-import 'Telas/Inicio.dart';
+import 'package:mybus/Global/Inicio_Screen.dart';
 import 'Telas/QrCodeCreate.dart';
-import 'Telas/Recargas.dart';
+
 
 class PainelMotorista extends StatefulWidget {
   @override
@@ -50,9 +48,8 @@ class _PainelMotoristaState extends State<PainelMotorista> {
   int _indiceAtual = 0;
   List<Widget> telas = [
       Inicio(),
-      Recargas(),
       QrCodeCreate(),
-      HistoricoCompra(),
+     
 
     ];
 
@@ -77,7 +74,9 @@ class _PainelMotoristaState extends State<PainelMotorista> {
           )
         ],
       ),
-      body: telas[_indiceAtual ],
+      body:   
+      
+      telas[_indiceAtual ],
       bottomNavigationBar: BottomNavigationBar(
 
         currentIndex: _indiceAtual,
@@ -94,21 +93,13 @@ class _PainelMotoristaState extends State<PainelMotorista> {
             icon: Icon(Icons.home),
             backgroundColor: Colors.yellow,
           ),
-          BottomNavigationBarItem(
-            title: Text("Recargas"),
-            icon: Icon(Icons.credit_card),
-            backgroundColor: Colors.green,
-          ),
+          
           BottomNavigationBarItem(
             title: Text("QrCode"),
             icon: Icon(Icons.aspect_ratio),
             backgroundColor: Colors.green,
           ),
-          BottomNavigationBarItem(
-            title: Text("Historico"),
-            icon: Icon(Icons.reorder),
-            backgroundColor: Colors.green,
-          ),
+          
             
         ], 
         ),
