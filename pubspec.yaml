@@ -30,10 +30,12 @@ dependencies:
   flutter_staggered_grid_view: ^0.3.0 #responsável por criar um grid de imagens.
   transparent_image: ^1.0.0 #responsável por deixar imagens transparentes, cor fundo.
   flutter_snake_navigationbar: ^0.4.0+1 # Utilizar navegação inferior customizada
+  google_sign_in: ^4.2.0 #autenticação com o google
+   
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+ 
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

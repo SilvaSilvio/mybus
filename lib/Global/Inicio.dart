@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -9,6 +10,13 @@ class Inicio extends StatefulWidget {
 }
 
 class _InicioState extends State<Inicio> {
+  List<String> itensMenu = ["Deslogar"];
+
+  _escolhaItemMenu(String escolha) async{
+     await FirebaseAuth.instance.signOut();
+     Navigator.pushReplacementNamed(context, "/");
+    }
+
   @override
   Widget build(BuildContext context) {
     Widget _buildBodyBack() => Container(
@@ -33,6 +41,19 @@ class _InicioState extends State<Inicio> {
                 title: const Text("Inicio"),
                 centerTitle: true,
               ),
+              actions: <Widget>[
+                PopupMenuButton<String>(
+                  onSelected: _escolhaItemMenu,
+                  itemBuilder: (context) {
+                    return itensMenu.map((String item) {
+                      return PopupMenuItem<String>(
+                        value: item,
+                        child: Text(item),
+                      );
+                    }).toList();
+                  },
+                )
+              ],
             ),
             FutureBuilder<QuerySnapshot>(
               future: Firestore.instance

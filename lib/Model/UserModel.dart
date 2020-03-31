@@ -2,11 +2,11 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/material.dart';
 
 class UserModel extends Model {
-  String _tipoUsuario;
   FirebaseAuth _auth = FirebaseAuth.instance;
   Firestore db = Firestore.instance;
 
@@ -14,12 +14,29 @@ class UserModel extends Model {
 
   Map<String, dynamic> userData = Map();
 
+  get nome => null;
+
+   Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {
+      "nome": nome,
+    };
+
+    return map;
+  }
+
+  
+
   bool isLoading = false;
+
+  BuildContext context;
+
+  //BuildContext get context => null;
   void signUp(
       {@required Map<String, dynamic> userData,
       @required String senha,
       @required VoidCallback onSuccess,
       @required VoidCallback onFail}) {
+
     isLoading = true;
     notifyListeners();
 
@@ -27,13 +44,16 @@ class UserModel extends Model {
         .createUserWithEmailAndPassword(
             email: userData["email"], password: senha)
         .then((firebaseUser) async {
-      db
-          .collection("usuarios")
+          
+          db.collection("Usuarios")
           .document(firebaseUser.user.uid)
-          .setData(userData);
+          .setData( userData );
+          
+          _direcionamentoPainelPorTipoUsuario(firebaseUser.user.uid);
+          //Navigator.pushNamed(context, "/painel-passageiro");
 
-      //_redirecionaPainelPorTipoUsuario(firebaseUser.user.uid);
-
+      // await _saveUserData(userData);
+      
       onSuccess();
       isLoading = false;
       notifyListeners();
@@ -42,6 +62,11 @@ class UserModel extends Model {
       isLoading = false;
       notifyListeners();
     });
+  }
+
+   Future<Null> _saveUserData(Map<String, dynamic> userData) async {
+    this.userData = userData;
+    await Firestore.instance.collection("Usuarios").document(firebaseUser.uid).setData(userData);
   }
 
   bool isLoggedIn() {
@@ -52,24 +77,24 @@ class UserModel extends Model {
       {@required String email,
       @required String pass,
       @required VoidCallback onSuccess,
-      @required VoidCallback onFail}) async {
-
-
-
+      @required VoidCallback onFail
+      }) async {
     isLoading = true;
     notifyListeners();
 
     _auth
         .signInWithEmailAndPassword(email: email, password: pass)
-        .then((user) async {
-      firebaseUser = user as FirebaseUser;
+        .then((firebaseUser) async {
+          //Navigator.pushNamed(context, "/painel-passageiro");
       
-      await _loadCurrentUser();
+     _direcionamentoPainelPorTipoUsuario(firebaseUser.user.uid);
+
+     await _loadCurrentUser();
 
       onSuccess();
       isLoading = false;
       notifyListeners();
-
+      
     }).catchError((e) {
       onFail();
       isLoading = false;
@@ -77,25 +102,37 @@ class UserModel extends Model {
     });
   }
 
- void signOut() async {
+    void _direcionamentoPainelPorTipoUsuario( String idUsuario) async {
+    Firestore db = Firestore.instance;
+
+    DocumentSnapshot snapshot =
+        await db.collection("Usuarios").document(idUsuario).get();
+
+    Map<String, dynamic> dados = snapshot.data;
+    String tipoUsuario = dados["tipoUsuario"];
+    print(tipoUsuario);
+    switch (tipoUsuario) {
+      case "Motorista":
+        Navigator.pushReplacementNamed(context, "/painel-motorista");
+        Navigator.of(context);        
+        break;
+      case "Passageiro":
+        Navigator.pushReplacementNamed(context, "/painel-passageiro");
+        break;
+      case "Administrador":
+        Navigator.pushReplacementNamed(context, "/painel-administrador");
+        break;
+    }
+  }
+
+
+  void signOut() async {
     await _auth.signOut();
 
     userData = Map();
     firebaseUser = null;
 
     notifyListeners();
-  }
-
-  String identificaUsuario(String tipoUsuario) {
-    var tipoUsuario;
-    if (tipoUsuario == "Passageiro") {
-      tipoUsuario = "Passageiro";
-    } else if (tipoUsuario == "Motorista") {
-      tipoUsuario = "Motorista";
-    } else if (tipoUsuario == "Administrador") {
-      tipoUsuario = "Administrador";
-    }
-    return tipoUsuario;
   }
 
   Future<Null> _loadCurrentUser() async {
@@ -112,18 +149,33 @@ class UserModel extends Model {
     notifyListeners();
   }
 
-
-  void recuperarSenha(String email){
+  void recuperarSenha(String email) {
     _auth.sendPasswordResetEmail(email: email);
   }
 
+  final googleSignIn = GoogleSignIn();
 
-
-  set tipoUsuario(String value) {
-    _tipoUsuario = value;
+  Future<Null> googleSigIn() async {
+    GoogleSignInAccount user = googleSignIn.currentUser;
+    if (user == null) user = await googleSignIn.signInSilently();
+    if (user == null) user = await googleSignIn.signIn();
+    if (await _auth.currentUser() == null) {
+      GoogleSignInAuthentication credentials =
+          await googleSignIn.currentUser.authentication;
+      await _auth.signInWithCredential(GoogleAuthProvider.getCredential(
+          idToken: credentials.idToken, accessToken: credentials.accessToken));
+    }
   }
-  String get tipoUsuario => _tipoUsuario;
+
+  void incioCarregamento() async {
+    isLoading = true;
+    notifyListeners();
+    await Future.delayed(Duration(seconds: 2));
+  }
+
+  void finalCarregamento(){
+    isLoading = false;
+    notifyListeners();
+
+  }
 }
-
-
-

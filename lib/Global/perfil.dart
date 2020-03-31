@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:io';
 
 class Perfil extends StatefulWidget {
   @override
@@ -11,72 +9,14 @@ class Perfil extends StatefulWidget {
 }
 
 class _PerfilState extends State<Perfil> {
+  final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   TextEditingController _controllerNome = TextEditingController();
   TextEditingController _controllerTelefone = TextEditingController();
   TextEditingController _controllerEmail = TextEditingController();
 
-  File _imagem;
   String _idUsuarioLogado;
-  bool _subindoImagem = false;
-  String _urlImagemRecuperada;
-
-  Future _recuperarImagem(String origemImagem) async {
-    File imagemSelecionada;
-    switch (origemImagem) {
-      case "camera":
-        imagemSelecionada =
-            await ImagePicker.pickImage(source: ImageSource.camera);
-        break;
-      case "galeria":
-        imagemSelecionada =
-            await ImagePicker.pickImage(source: ImageSource.gallery);
-        break;
-    }
-
-    setState(() {
-      _imagem = imagemSelecionada;
-      if (_imagem != null) {
-        _subindoImagem = true;
-        _uploadImagem();
-      }
-    });
-  }
-
-  Future _uploadImagem() async {
-    FirebaseStorage storage = FirebaseStorage.instance;
-    StorageReference pastaRaiz = storage.ref();
-    StorageReference arquivo =
-        pastaRaiz.child("Perfil").child(_idUsuarioLogado + ".jpg");
-
-    //Upload da imagem
-    StorageUploadTask task = arquivo.putFile(_imagem);
-    //Controlar progresso do upload
-    task.events.listen((StorageTaskEvent storageEvent) {
-      if (storageEvent.type == StorageTaskEventType.progress) {
-        setState(() {
-          _subindoImagem = true;
-        });
-      } else if (storageEvent.type == StorageTaskEventType.success) {
-        setState(() {
-          _subindoImagem = false;
-        });
-      }
-    });
-
-    //Recuperar url da imagem
-    task.onComplete.then((StorageTaskSnapshot snapshot) {
-      _recuperarUrlImagem(snapshot);
-    });
-  }
-
-  Future _recuperarUrlImagem(StorageTaskSnapshot snapshot) async {
-    String url = await snapshot.ref.getDownloadURL();
-    _atualizarUrlImagemFirestore(url);
-
-    setState(() {
-      _urlImagemRecuperada = url;
-    });
-  }
 
   _atualizarNomeFirestore() {
     String nome = _controllerNome.text;
@@ -94,17 +34,7 @@ class _PerfilState extends State<Perfil> {
         .collection("usuarios")
         .document(_idUsuarioLogado)
         .updateData(dadosAtualizar);
-  }
-
-  _atualizarUrlImagemFirestore(String url) {
-    Firestore db = Firestore.instance;
-
-    Map<String, dynamic> dadosAtualizar = {"urlImagem": url};
-
-    db
-        .collection("usuarios")
-        .document(_idUsuarioLogado)
-        .updateData(dadosAtualizar);
+    _onSuccess();
   }
 
   _recuperarDadosUsuario() async {
@@ -120,10 +50,6 @@ class _PerfilState extends State<Perfil> {
     _controllerNome.text = dados["nome"];
     _controllerEmail.text = dados["email"];
     _controllerTelefone.text = dados["telefone"];
-
-    if (dados["urlImagem"] != null) {
-      _urlImagemRecuperada = dados["urlImagem"];
-    }
   }
 
   @override
@@ -135,119 +61,125 @@ class _PerfilState extends State<Perfil> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Theme.of(context).primaryColor,
-      body: Container(
-        padding: EdgeInsets.all(20),
+      body: Form(
+        key: _formKey,
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                Container(
-                  padding: EdgeInsets.zero,
-                  child: _subindoImagem
-                      ? CircularProgressIndicator()
-                      : Container(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(padding: EdgeInsets.only(bottom: 200)),
+              Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: TextFormField(
+                  validator: (text) {
+                    if (text.isEmpty) return "Informe um nome";
+                  },
+                  controller: _controllerNome,
+                  autofocus: true,
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(fontSize: 20),
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      hintText: "Nome",
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15))),
                 ),
-                CircleAvatar(
-                    radius: 100,
-                    backgroundColor: Colors.grey,
-                    backgroundImage: _urlImagemRecuperada != null
-                        ? NetworkImage(_urlImagemRecuperada)
-                        : null),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  //crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    
-                    FlatButton(
-                      child: Text("Câmera"),
-                      onPressed: () {
-                        _recuperarImagem("camera");
-                      },
-                    ),
-                    FlatButton(
-                      child: Text("Galeria"),
-                      onPressed: () {
-                        _recuperarImagem("galeria");
-                      },
-                    )
-                  ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: TextFormField(
+                  validator: (text) {
+                    if (text.isEmpty || !text.contains("@"))
+                      return "E-mail inválido";
+                  },
+                  controller: _controllerEmail,
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(fontSize: 20),
+                 
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      hintText: "E-mail",
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15))),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 8),
-                  child: TextField(
-                    controller: _controllerNome,
-                    autofocus: true,
-                    keyboardType: TextInputType.text,
-                    style: TextStyle(fontSize: 20),
-                        decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        hintText: "Nome",
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15))),
-                  ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: TextFormField(
+                  validator: (text){
+                    if(text.length < 15) return "Telefone Inválido";
+                  },
+                  maxLength: 15,
+                  controller: _controllerTelefone,
+                  keyboardType: TextInputType.number,
+                  style: TextStyle(fontSize: 20),
+                      decoration: InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      hintText: "Telefone",
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15))),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 8),
-                  child: TextField(
-                    controller: _controllerEmail,
-                    keyboardType: TextInputType.text,
-                    style: TextStyle(fontSize: 20),
-                    /*onChanged: (texto){
-                      _atualizarNomeFirestore(texto);
-                    },*/
-                    decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        hintText: "E-mail",
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15))),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 8),
-                  child: TextField(
-                    controller: _controllerTelefone,
-                    keyboardType: TextInputType.text,
-                    style: TextStyle(fontSize: 20),
-                    /*onChanged: (texto){
-                      _atualizarNomeFirestore(texto);
-                    },*/
-                    decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        hintText: "Telefone",
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15))),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.zero,
-                  child: RaisedButton(
-                      child: Text(
-                        "Alterar",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          ),
+              ),
+              Padding(
+                padding: EdgeInsets.zero,
+                child: RaisedButton(
+                    child: Text(
+                      "Alterar",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
-                      color: Colors.blue,
-                      padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      onPressed: () {
+                    ),
+                    color: Colors.blue,
+                    padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
                         _atualizarNomeFirestore();
-                      }),
-                )
-              ],
-            ),
+                      }
+                    }),
+              )
+            ],
           ),
         ),
+      ),
     );
+  }
+
+  void _onSuccess() {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(
+        "Usuário alterado com sucesso!",
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+        ),
+        
+        ),
+      backgroundColor: Colors.green,
+      duration: Duration(seconds: 2),
+    ));
+    Future.delayed(Duration(seconds: 2)).then((_) {
+      //Navigator.of(context).pop();
+    });
+  }
+
+  void _onFail() {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text("Falha ao alterar usuário!"),
+      backgroundColor: Colors.redAccent,
+      duration: Duration(seconds: 2),
+    ));
   }
 }

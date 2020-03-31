@@ -7,6 +7,8 @@ class Usuario extends Pessoa
   dynamic senha;
   String _tipoUsuario;
 
+   bool isLoading = false;
+
   // 0: administrador, 1: motorista, 2: cliente
   List<Usuario> tipos;
 
@@ -32,13 +34,15 @@ String identificaUsuario(bool tipoUsuario){
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
       "nome": this.nome,
-      "email": this.email,
-      "telefone": this.telefone,
-      "TipoUsuario": this.tipoUsuario,
+     // "email": this.email,
+     // "telefone": this.telefone,
+     // "TipoUsuario": this.tipoUsuario,
     };
 
     return map;
   }
+
+  
 
 String get tipoUsuario => _tipoUsuario;
 

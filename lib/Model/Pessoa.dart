@@ -1,4 +1,6 @@
-class Pessoa
+import 'package:scoped_model/scoped_model.dart';
+
+class Pessoa extends Model
 {
   String nome, sexo, endereco, email;
   dynamic cpf, telefone;

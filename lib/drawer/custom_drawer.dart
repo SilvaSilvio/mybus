@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mybus/Model/UserModel.dart';
+import 'package:mybus/Model/pessoal/Pessoa/Usuario.dart';
 import 'package:mybus/drawer/drawer_tile.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class CustomDrawer extends StatelessWidget {
   final PageController pageController;
 
-  _sair(){
-     UserModel user = UserModel();
-     user.signOut();
+  _sair() {
+    UserModel user = UserModel();
+    user.signOut();
   }
 
   CustomDrawer(this.pageController);
@@ -27,7 +28,7 @@ class CustomDrawer extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           _buildDrawerBack(),
-           ListView(
+          ListView(
             padding: EdgeInsets.only(left: 32, top: 16),
             children: <Widget>[
               Container(
@@ -47,20 +48,22 @@ class CustomDrawer extends StatelessWidget {
                   Positioned(
                       left: 0,
                       bottom: 0,
-                      child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              new Text(
-                                "Olá, ", //${!model.isLoggedIn() ? "" : model.userData["nome"]}",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).primaryColor,
-                                ),
+                      child: ScopedModelDescendant<UserModel>(
+                          builder: (context, child, model) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            new Text(
+                              "Olá, ${!model.isLoading ? "Ainda não estar aparecendo" : model.userData["nome"]}",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
                               ),
-                            ],
-                          ),
-                      ),
+                            ),
+                          ],
+                        );
+                      })),
                 ]),
               ),
               Divider(),
@@ -72,7 +75,11 @@ class CustomDrawer extends StatelessWidget {
                   Icons.location_on, "Postos de recargas", pageController, 3),
               DrawerTile(Icons.list, "Recarga online", pageController, 4),
               DrawerTile(Icons.settings, "Configurações", pageController, 5),
-              DrawerTile(Icons.redeem, "Convide Amigos", pageController, 6,
+              DrawerTile(
+                Icons.redeem,
+                "Convide Amigos",
+                pageController,
+                6,
               ),
               Divider(),
               Text("Versão"),

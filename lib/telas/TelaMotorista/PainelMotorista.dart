@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mybus/Global/Inicio_Screen.dart';
+import 'package:mybus/Global/Inicio.dart';
 import 'Telas/QrCodeCreate.dart';
 
 

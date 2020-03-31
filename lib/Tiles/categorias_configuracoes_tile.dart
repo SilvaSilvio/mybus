@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:mybus/Screen/categoria_perfil.dart';
 
 class CategoriaConfiguracoes extends StatelessWidget {
   final DocumentSnapshot snapshot;
@@ -17,7 +16,7 @@ class CategoriaConfiguracoes extends StatelessWidget {
           onTap: (){
             Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (context) => CategoriaPerfil(snapshot),
+                 //   builder: (context) => aqui será passado uma página(snapshot),
                 ),
             );
           },

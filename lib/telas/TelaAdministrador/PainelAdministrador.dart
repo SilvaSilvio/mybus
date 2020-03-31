@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mybus/Global/Inicio_Screen.dart';
-import 'package:mybus/Global/QrScanner.dart';
+import 'package:mybus/Global/Inicio.dart';
 import 'package:mybus/Global/Termo_Uso.dart';
 import 'package:mybus/Global/UsuarioCadastrados.dart';
 import 'package:mybus/Global/perfil.dart';
@@ -17,7 +16,8 @@ class PainelAdministrador extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       children: <Widget>[
          Scaffold(
-           appBar: AppBar(title: new Text("Painel Administrador"),),
+           appBar: AppBar(
+             title: new Text("Painel Administrador"),),
           body: Inicio(),
           drawer: CustomDrawer(_pageController),
         ),
