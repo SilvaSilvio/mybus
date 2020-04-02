@@ -85,7 +85,7 @@ class UserModel extends Model {
     _auth
         .signInWithEmailAndPassword(email: email, password: pass)
         .then((firebaseUser) async {
-          //Navigator.pushNamed(context, "/painel-passageiro");
+          Navigator.pushNamed(context, "/painel-passageiro");
       
      _direcionamentoPainelPorTipoUsuario(firebaseUser.user.uid);
 
@@ -176,6 +176,13 @@ class UserModel extends Model {
   void finalCarregamento(){
     isLoading = false;
     notifyListeners();
+
+  }
+
+  void teste(){
+    isLoading = false;
+    notifyListeners();
+    
 
   }
 }

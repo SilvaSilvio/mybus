@@ -5,7 +5,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'Rotas.dart';
 
 final ThemeData temaPadrao = ThemeData(
-  primaryColor: Color(0xff363636), //0xff075E54
+  primaryColor: Color(0xff8B4513), //0xff075E54
   accentColor: Color(0xffD37682), //0xff25D366
 );
 

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:masked_text/masked_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mybus/Model/UserModel.dart';
-import 'package:mybus/Model/pessoal/Pessoa/Usuario.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class Cadastro extends StatefulWidget {
@@ -13,68 +11,15 @@ class Cadastro extends StatefulWidget {
 }
 
 class _CadastroState extends State<Cadastro> {
-  TextEditingController _controllerNome = TextEditingController();
-  TextEditingController _controllerTelefone = TextEditingController();
-  TextEditingController _controllerEmail = TextEditingController();
-  TextEditingController _controllerSenha = TextEditingController();
-  bool _tipoUsuario = false;
+  final _controllerNome = TextEditingController();
+  final _controllerTelefone = TextEditingController();
+  final _controllerEmail = TextEditingController();
+  final _controllerSenha = TextEditingController();
+
   String tipoUsuario = "Passageiro";
 
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  _validarCampos() {
-    //Recuperar dados dos campos
-    String nome = _controllerNome.text;
-    String telefone = _controllerTelefone.text;
-    String email = _controllerEmail.text;
-    String senha = _controllerSenha.text;
-
-    Usuario usuario = Usuario();
-    usuario.nome = nome;
-    usuario.telefone = telefone;
-    usuario.email = email;
-    usuario.senha = senha;
-
-    usuario.tipoUsuario = usuario.identificaUsuario(_tipoUsuario);
-    _cadastrarUsuario(usuario);
-  }
-
-  _cadastrarUsuario(Usuario usuario) {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    Firestore db = Firestore.instance;
-
-    auth
-        .createUserWithEmailAndPassword(
-            email: usuario.email, password: usuario.senha)
-        .then((firebaseUser) {
-      _onSuccess();
-
-      db
-          .collection("usuarios")
-          .document(firebaseUser.user.uid)
-          .setData(usuario.toMap());
-
-      //  redireciona para o painel, de acordo com o tipoUsuario
-      switch (usuario.tipoUsuario) {
-        //usuario.tipoUsuario
-        case "Passageiro":
-          Navigator.pushNamedAndRemoveUntil(
-              context, "/painel-passageiro", (_) => false);
-          break;
-        case "Motorista":
-          Navigator.pushNamedAndRemoveUntil(
-              context, "/painel-motorista", (_) => false);
-          break;
-        case "Administrador":
-          Navigator.pushNamedAndRemoveUntil(
-              context, "/painel-administrador", (_) => false);
-          break;
-      }
-    }).catchError((error) {
-      _onFail();
-    });
-  }
 
   final googleSignIn = GoogleSignIn();
   Future<Null> googleSigIn() async {
@@ -88,9 +33,7 @@ class _CadastroState extends State<Cadastro> {
 
       await _auth.signInWithCredential(GoogleAuthProvider.getCredential(
           idToken: credentials.idToken, accessToken: credentials.accessToken));
-      setState(() {
-        Navigator.pushNamed(context, "/painel-passageiro");
-      });
+     
     }
   }
 
@@ -98,9 +41,8 @@ class _CadastroState extends State<Cadastro> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.black,
-      body: ScopedModelDescendant<UserModel>(
-        builder: (context, child, model) {
+      backgroundColor: Theme.of(context).primaryColor,
+      body: ScopedModelDescendant<UserModel>(builder: (context, child, model) {
         if (model.isLoading)
           return Center(
             child: CircularProgressIndicator(),
@@ -156,13 +98,14 @@ class _CadastroState extends State<Cadastro> {
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15))),
-                  )),
+                  ),
+                  ),
               Align(
                 alignment: Alignment.center,
                 child: new Text(
                   "Para logar",
                   style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 15,
                       fontWeight: FontWeight.bold),
                 ),
@@ -281,7 +224,17 @@ class _CadastroState extends State<Cadastro> {
       duration: Duration(seconds: 2),
     ));
     Future.delayed(Duration(seconds: 2)).then((_) {
-      Navigator.of(context).pop();
+      Navigator.of(context).popAndPushNamed("/painel-passageiro");
+      /*switch (tipoUsuario) {
+      case "Motorista":
+        Navigator.pushReplacementNamed(context, "/painel-motorista");
+        Navigator.of(context);        
+        break;
+      case "Passageiro":
+        Navigator.pushReplacementNamed(context, "/painel-passageiro");
+        break; 
+    }
+    */
     });
   }
 

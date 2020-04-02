@@ -13,27 +13,22 @@ import 'package:scoped_model/scoped_model.dart';
 class PainelPassageiro extends StatelessWidget {
   final _pageController = PageController();
 
-  Widget _buildBodyBack() => Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Color.fromARGB(255, 211, 118, 130),
-          Color.fromARGB(255, 253, 181, 168)
-        ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
-      );
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body:
-        ScopedModelDescendant<UserModel>(builder: (context, child, model) {
+    return Scaffold(
+      body:
+            ScopedModelDescendant<UserModel>(builder: (context, child, model) {
       if (model.isLoading)
         return Center(
           child: CircularProgressIndicator(),
         );
       return PageView(
+        
           controller: _pageController,
           physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             Scaffold(
+              
               body: Inicio(),
               drawer: CustomDrawer(_pageController),
             ),

@@ -109,11 +109,11 @@ class _LoginState extends State<Login> {
                             "images/LogoBus.png",
                             width: 200,
                             height: 200,
-                            color: Colors.blue,
+                            color: Colors.blue, 
                           ),
                           Center(
                             child: Text(
-                              "My Bus",
+                              "Pay Carbus",
                               style: TextStyle(
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold,
@@ -225,13 +225,14 @@ class _LoginState extends State<Login> {
                                 ),
                                 onPressed: () {
                                   if (_formKey.currentState.validate()) {
-                                  _validarCampos();
-                                  /*  model.signIn(
+                                  //_validarCampos();
+                                    model.signIn(
                                     email: _controllerEmail.text,
                                     pass: _controllerSenha.text,
                                     onSuccess: _onSuccess,
                                     onFail: _onFail,
-                                    ); */
+                                    ); 
+                                    
                                   }
                                 }),
                           ),
