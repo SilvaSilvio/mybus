@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mybus/Global/Inicio.dart';
 import 'package:mybus/Global/QrScanner.dart';
 import 'package:mybus/Global/Recargas.dart';
+import 'package:mybus/Global/Termo_Uso.dart';
+import 'package:mybus/Global/inicio/PageFour.dart';
 import 'package:mybus/Global/perfil.dart';
 import 'package:mybus/Model/UserModel.dart';
 
@@ -28,8 +30,19 @@ class PainelPassageiro extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             Scaffold(
-              
-              body: Inicio(),
+              appBar: AppBar(
+                title: Text(
+                  "Inicio",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+                centerTitle: true,
+                backgroundColor: Theme.of(context).accentColor,
+              ),
+              body: PageFour(),
               drawer: CustomDrawer(_pageController),
             ),
             Scaffold(
@@ -101,7 +114,7 @@ class PainelPassageiro extends StatelessWidget {
             Scaffold(
               appBar: AppBar(
                 title: new Text(
-                  "Configurações",
+                  "Termos de uso",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
@@ -111,7 +124,23 @@ class PainelPassageiro extends StatelessWidget {
                 centerTitle: true,
                 backgroundColor: Theme.of(context).accentColor,
               ),
-              body: ConfiguracoesTab(),
+              body: TermosUso(),
+              drawer: CustomDrawer(_pageController),
+            ),
+            Scaffold(
+              body: Container(),
+              drawer: CustomDrawer(_pageController),
+            ),
+            Scaffold(
+              body: ScopedModelDescendant<UserModel>(
+                builder: (context, child, model){
+                  return GestureDetector(
+                    child: Text(model.signOut()),
+                    onTap: ()=> Navigator.pushNamed(context, "/"),
+                  );
+                 
+                }
+                ),
               drawer: CustomDrawer(_pageController),
             ),
             Scaffold(

@@ -31,6 +31,11 @@ dependencies:
   transparent_image: ^1.0.0 #responsável por deixar imagens transparentes, cor fundo.
   flutter_snake_navigationbar: ^0.4.0+1 # Utilizar navegação inferior customizada
   google_sign_in: ^4.2.0 #autenticação com o google
+  fluttertoast: ^4.0.1  #dependencias do gridList
+  google_fonts: ^0.4.0
+  
+
+
    
 dev_dependencies:
   flutter_test:
@@ -54,17 +59,15 @@ flutter:
   #  - images/a_dot_ham.jpeg
 
   assets:
-  - images/fb-icon.png
-  - images/Logo.png
-  - images/logo12.png
   - images/usuario.png
   - images/LogoBus.png
-  - images/MyBus.png
   - images/LoginCadastro1.png
-
-  
+  - images/inicio/historico.png
+  - images/inicio/pagamento.png
+  - images/inicio/recarga.png
+  - images/inicio/informacoes.png
+  - images/background.jpg
  
-
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

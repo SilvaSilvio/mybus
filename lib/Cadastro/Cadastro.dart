@@ -41,8 +41,12 @@ class _CadastroState extends State<Cadastro> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Theme.of(context).primaryColor,
-      body: ScopedModelDescendant<UserModel>(builder: (context, child, model) {
+      body: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("images/background.jpg"),
+                    fit: BoxFit.cover)),
+      child: ScopedModelDescendant<UserModel>(builder: (context, child, model) {
         if (model.isLoading)
           return Center(
             child: CircularProgressIndicator(),
@@ -105,7 +109,7 @@ class _CadastroState extends State<Cadastro> {
                 child: new Text(
                   "Para logar",
                   style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.bold),
                 ),
@@ -139,7 +143,7 @@ class _CadastroState extends State<Cadastro> {
                 padding: EdgeInsets.only(top: 5),
                 child: TextFormField(
                   controller: _controllerSenha,
-                  obscureText: true,
+                  obscureText: !model.showPassword,
                   keyboardType: TextInputType.visiblePassword,
                   validator: (text) {
                     if (text.isEmpty || text.length < 6)
@@ -150,7 +154,17 @@ class _CadastroState extends State<Cadastro> {
                   ),
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                    prefixIcon: Icon(Icons.visibility_off),
+                    prefixIcon: Icon(Icons.security),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.remove_red_eye,
+                      color: model.showPassword ? Colors.blue : Colors.grey
+                      ),
+                      onPressed: (){
+                        setState(() {
+                          model.showPassword = !model.showPassword;
+                        });
+                      }
+                      ),
                     hintText: "Senha",
                     filled: true,
                     fillColor: Colors.white,
@@ -214,6 +228,7 @@ class _CadastroState extends State<Cadastro> {
           ),
         );
       }),
+      ),
     );
   }
 
@@ -225,16 +240,7 @@ class _CadastroState extends State<Cadastro> {
     ));
     Future.delayed(Duration(seconds: 2)).then((_) {
       Navigator.of(context).popAndPushNamed("/painel-passageiro");
-      /*switch (tipoUsuario) {
-      case "Motorista":
-        Navigator.pushReplacementNamed(context, "/painel-motorista");
-        Navigator.of(context);        
-        break;
-      case "Passageiro":
-        Navigator.pushReplacementNamed(context, "/painel-passageiro");
-        break; 
-    }
-    */
+     
     });
   }
 

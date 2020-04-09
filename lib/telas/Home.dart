@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mybus/telas/Cadastro.dart';
-import 'package:mybus/telas/Login.dart';
+import 'package:mybus/Cadastro/Cadastro.dart';
+import 'package:mybus/Login/Login.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -21,6 +21,7 @@ class _HomeState extends State<Home> {
         Scaffold(
           body: telas[_indiceAtual],
           bottomNavigationBar: BottomNavigationBar(
+            elevation: 15,
             currentIndex: _indiceAtual,
             onTap: (indice) {
               setState(() {
@@ -35,7 +36,7 @@ class _HomeState extends State<Home> {
                 title: Text(
                   "Login",
                   style: TextStyle(
-                    //color: Colors.white,
+                    color: Colors.white,
                   ),
                 ),
                 icon: Icon(Icons.home),

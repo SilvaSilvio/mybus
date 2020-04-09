@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mybus/Model/UserModel.dart';
-import 'package:mybus/Model/pessoal/Pessoa/Usuario.dart';
 import 'package:mybus/drawer/drawer_tile.dart';
+import 'package:mybus/telas/Home.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class CustomDrawer extends StatelessWidget {
   final PageController pageController;
-
-  _sair() {
-    UserModel user = UserModel();
-    user.signOut();
-  }
-
   CustomDrawer(this.pageController);
 
   @override
@@ -46,24 +40,26 @@ class CustomDrawer extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                      left: 0,
-                      bottom: 0,
-                      child: ScopedModelDescendant<UserModel>(
-                          builder: (context, child, model) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            new Text(
-                              "Olá, ${!model.isLoading ? "Ainda não estar aparecendo" : model.userData["nome"]}",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
-                              ),
+                    left: 0,
+                    bottom: 0,
+                    child: ScopedModelDescendant<UserModel>(
+                        builder: (context, child, model) {
+                      print(model.isLoading);
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          new Text(
+                            "Olá, ${!model.isLoggedIn() ? "" : model.userData["email"]}",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor,
                             ),
-                          ],
-                        );
-                      })),
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
                 ]),
               ),
               Divider(),
@@ -74,14 +70,35 @@ class CustomDrawer extends StatelessWidget {
               DrawerTile(
                   Icons.location_on, "Postos de recargas", pageController, 3),
               DrawerTile(Icons.list, "Recarga online", pageController, 4),
-              DrawerTile(Icons.settings, "Configurações", pageController, 5),
-              
-              DrawerTile(
-                Icons.redeem,
-                "Convide Amigos",
-                pageController,
-                6,
-              ),
+              DrawerTile(Icons.settings, "Termos de uso", pageController, 5),
+              Container(
+                  margin: EdgeInsets.zero,
+                  padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  height: 45,
+                  child: Stack(children: <Widget>[
+                    Positioned(
+                      top: 4.0,
+                     // left: -1,
+                      child: ScopedModelDescendant<UserModel>(builder: (context, child, model){
+                        if (model.isLoading)
+                        return Center(child: LinearProgressIndicator(),);
+                        return GestureDetector(
+                          child: Row(
+                          children: <Widget>[
+                             Icon(Icons.exit_to_app, size: 32, color: Colors.black54,),
+                            Text("       Sair", style: TextStyle(fontSize: 18, color: Colors.black54),),
+                           
+                          ],
+                        ),
+                        onTap: (){
+                          if (model.isLoggedIn())
+                           model.signOut();
+                           Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Home()));
+                        }
+                        );
+                      })
+                    ),
+                  ])),
               Divider(),
               Text("Versão"),
               DrawerTile(

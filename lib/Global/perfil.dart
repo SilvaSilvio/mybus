@@ -31,7 +31,7 @@ class _PerfilState extends State<Perfil> {
     };
 
     db
-        .collection("usuarios")
+        .collection("Usuarios")
         .document(_idUsuarioLogado)
         .updateData(dadosAtualizar);
     _onSuccess();
@@ -44,7 +44,7 @@ class _PerfilState extends State<Perfil> {
 
     Firestore db = Firestore.instance;
     DocumentSnapshot snapshot =
-        await db.collection("usuarios").document(_idUsuarioLogado).get();
+        await db.collection("Usuarios").document(_idUsuarioLogado).get();
 
     Map<String, dynamic> dados = snapshot.data;
     _controllerNome.text = dados["nome"];

@@ -12,11 +12,13 @@ class UserModel extends Model {
 
   FirebaseUser firebaseUser;
 
+  bool showPassword = false;
+
   Map<String, dynamic> userData = Map();
 
   get nome => null;
 
-   Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
       "nome": nome,
     };
@@ -24,19 +26,25 @@ class UserModel extends Model {
     return map;
   }
 
-  
-
   bool isLoading = false;
 
   BuildContext context;
 
-  //BuildContext get context => null;
+   // Pegar usuario ao iniciar o app
+    @override
+  void addListener(VoidCallback listener) {
+    super.addListener(listener);
+
+    _loadCurrentUser();
+  }
+
+
+  //Para Cadastro de Usuario.
   void signUp(
       {@required Map<String, dynamic> userData,
       @required String senha,
       @required VoidCallback onSuccess,
       @required VoidCallback onFail}) {
-
     isLoading = true;
     notifyListeners();
 
@@ -44,16 +52,16 @@ class UserModel extends Model {
         .createUserWithEmailAndPassword(
             email: userData["email"], password: senha)
         .then((firebaseUser) async {
-          
-          db.collection("Usuarios")
+      db
+          .collection("Usuarios")
           .document(firebaseUser.user.uid)
-          .setData( userData );
-          
-          _direcionamentoPainelPorTipoUsuario(firebaseUser.user.uid);
-          //Navigator.pushNamed(context, "/painel-passageiro");
+          .setData(userData);
+
+      _direcionamentoPainelPorTipoUsuario(firebaseUser.user.uid);
+      //Navigator.pushNamed(context, "/painel-passageiro");
 
       // await _saveUserData(userData);
-      
+
       onSuccess();
       isLoading = false;
       notifyListeners();
@@ -64,36 +72,39 @@ class UserModel extends Model {
     });
   }
 
-   Future<Null> _saveUserData(Map<String, dynamic> userData) async {
+  Future<Null> _saveUserData(Map<String, dynamic> userData) async {
     this.userData = userData;
-    await Firestore.instance.collection("Usuarios").document(firebaseUser.uid).setData(userData);
+    await Firestore.instance
+        .collection("Usuarios")
+        .document(firebaseUser.uid)
+        .setData(userData);
   }
 
+  //Verificar Usuario logado
   bool isLoggedIn() {
     return firebaseUser != null;
   }
 
+  //Para entrar
   void signIn(
       {@required String email,
       @required String pass,
       @required VoidCallback onSuccess,
-      @required VoidCallback onFail
-      }) async {
+      @required VoidCallback onFail}) async {
+    
     isLoading = true;
     notifyListeners();
 
     _auth
         .signInWithEmailAndPassword(email: email, password: pass)
-        .then((firebaseUser) async {
-          Navigator.pushNamed(context, "/painel-passageiro");
-      
-     _direcionamentoPainelPorTipoUsuario(firebaseUser.user.uid);
-
-     await _loadCurrentUser();
-
+        .then((user) async {
+     
+      await _loadCurrentUser();
+     
       onSuccess();
       isLoading = false;
       notifyListeners();
+
       
     }).catchError((e) {
       onFail();
@@ -102,7 +113,7 @@ class UserModel extends Model {
     });
   }
 
-    void _direcionamentoPainelPorTipoUsuario( String idUsuario) async {
+  void _direcionamentoPainelPorTipoUsuario(String idUsuario) async {
     Firestore db = Firestore.instance;
 
     DocumentSnapshot snapshot =
@@ -114,7 +125,7 @@ class UserModel extends Model {
     switch (tipoUsuario) {
       case "Motorista":
         Navigator.pushReplacementNamed(context, "/painel-motorista");
-        Navigator.of(context);        
+        Navigator.of(context);
         break;
       case "Passageiro":
         Navigator.pushReplacementNamed(context, "/painel-passageiro");
@@ -125,9 +136,9 @@ class UserModel extends Model {
     }
   }
 
-
-  void signOut() async {
+  signOut() async {
     await _auth.signOut();
+   // Navigator.popAndPushNamed(context, "/");
 
     userData = Map();
     firebaseUser = null;
@@ -138,9 +149,9 @@ class UserModel extends Model {
   Future<Null> _loadCurrentUser() async {
     if (firebaseUser == null) firebaseUser = await _auth.currentUser();
     if (firebaseUser != null) {
-      if (userData["name"] == null) {
+      if (userData["nome"] == null) {
         DocumentSnapshot docUser = await Firestore.instance
-            .collection("usuarios")
+            .collection("Usuarios")
             .document(firebaseUser.uid)
             .get();
         userData = docUser.data;
@@ -173,16 +184,13 @@ class UserModel extends Model {
     await Future.delayed(Duration(seconds: 2));
   }
 
-  void finalCarregamento(){
+  void finalCarregamento() {
     isLoading = false;
     notifyListeners();
-
   }
 
-  void teste(){
+  void teste() {
     isLoading = false;
     notifyListeners();
-    
-
   }
 }
