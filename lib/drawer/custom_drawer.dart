@@ -28,16 +28,23 @@ class CustomDrawer extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(bottom: 8),
                 padding: EdgeInsets.fromLTRB(0, 16, 16, 8),
-                height: 180,
+                height: 190,
                 child: Stack(children: <Widget>[
                   Positioned(
                     top: 8.0,
-                    left: 0.0,
-                    child: new Text(
-                      "My Bus",
+                    left: 15.0,
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.nature_people, size: 38,),
+                        new Text(
+                      "  My Bus   ",
                       style:
-                          TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 34, fontWeight: FontWeight.w300),
                     ),
+                    Icon(Icons.directions_bus, size: 34)
+                      ],  
+                    )
+                    
                   ),
                   Positioned(
                     left: 0,
@@ -48,16 +55,22 @@ class CustomDrawer extends StatelessWidget {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
+                          Icon(Icons.person_outline, size: 50,),
+                          new Text("${!model.isLoggedIn() ? "Não logado" : model.userData["nome"]}", style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w300,
+                          ),),
                           new Text(
-                            "Olá, ${!model.isLoggedIn() ? "" : model.userData["email"]}",
+                            "${!model.isLoggedIn() ? "" : model.userData["email"]}",
                             style: TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w300,
                               color: Theme.of(context).primaryColor,
                             ),
                           ),
                         ],
                       );
+                      
                     }),
                   ),
                 ]),
@@ -77,27 +90,35 @@ class CustomDrawer extends StatelessWidget {
                   height: 45,
                   child: Stack(children: <Widget>[
                     Positioned(
-                      top: 4.0,
-                     // left: -1,
-                      child: ScopedModelDescendant<UserModel>(builder: (context, child, model){
-                        if (model.isLoading)
-                        return Center(child: LinearProgressIndicator(),);
-                        return GestureDetector(
-                          child: Row(
-                          children: <Widget>[
-                             Icon(Icons.exit_to_app, size: 32, color: Colors.black54,),
-                            Text("       Sair", style: TextStyle(fontSize: 18, color: Colors.black54),),
-                           
-                          ],
-                        ),
-                        onTap: (){
-                          if (model.isLoggedIn())
-                           model.signOut();
-                           Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Home()));
-                        }
-                        );
-                      })
-                    ),
+                        top: 4.0,
+                        // left: -1,
+                        child: ScopedModelDescendant<UserModel>(
+                            builder: (context, child, model) {
+                          if (model.isLoading)
+                            return Center(
+                              child: LinearProgressIndicator(),
+                            );
+                          return GestureDetector(
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.exit_to_app,
+                                    size: 32,
+                                    color: Colors.black54,
+                                  ),
+                                  Text(
+                                    "       Sair",
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black54),
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                if (model.isLoggedIn()) model.signOut();
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => Home()));
+                              });
+                        })),
                   ])),
               Divider(),
               Text("Versão"),
@@ -110,3 +131,5 @@ class CustomDrawer extends StatelessWidget {
     );
   }
 }
+
+/* */

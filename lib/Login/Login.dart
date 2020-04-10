@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mybus/Login/EsqueciMinhaSenha.dart';
 import 'package:mybus/Model/UserModel.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -220,6 +219,7 @@ class _LoginState extends State<Login> {
         "Falha ao Entrar! Verifique usuario e senha e tente novamente",
         textAlign: TextAlign.center,
       ),
+      
       backgroundColor: Colors.redAccent,
       duration: Duration(seconds: 2),
     ));

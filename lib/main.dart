@@ -25,7 +25,7 @@ class MyBus extends StatelessWidget {
         initialRoute: "/",
         onGenerateRoute: Rotas.gerarRotas,
         debugShowCheckedModeBanner: false,
-        home: PageFour()
+        home: Home()
       ),
     );
   }

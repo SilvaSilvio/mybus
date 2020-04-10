@@ -201,7 +201,8 @@ class _CadastroState extends State<Cadastro> {
                             userData: userData,
                             senha: _controllerSenha.text,
                             onSuccess: _onSuccess,
-                            onFail: _onFail);
+                            onFail: _onFail
+                            );
                       }
                     }),
               ),

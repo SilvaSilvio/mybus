@@ -45,6 +45,7 @@ class UserModel extends Model {
       @required String senha,
       @required VoidCallback onSuccess,
       @required VoidCallback onFail}) {
+    
     isLoading = true;
     notifyListeners();
 
@@ -52,15 +53,16 @@ class UserModel extends Model {
         .createUserWithEmailAndPassword(
             email: userData["email"], password: senha)
         .then((firebaseUser) async {
-      db
-          .collection("Usuarios")
+
+          db.
+          collection("Usuarios")
           .document(firebaseUser.user.uid)
-          .setData(userData);
+        .setData( userData );
+     // await _saveUserData(userData);
 
-      _direcionamentoPainelPorTipoUsuario(firebaseUser.user.uid);
-      //Navigator.pushNamed(context, "/painel-passageiro");
-
-      // await _saveUserData(userData);
+        // _direcionamentoPainelPorTipoUsuario(firebaseUser.user.uid);
+      await _loadCurrentUser();
+     
 
       onSuccess();
       isLoading = false;
@@ -98,8 +100,9 @@ class UserModel extends Model {
     _auth
         .signInWithEmailAndPassword(email: email, password: pass)
         .then((user) async {
+         //firebaseUser = user as FirebaseUser;
      
-      await _loadCurrentUser();
+       await _loadCurrentUser();
      
       onSuccess();
       isLoading = false;
